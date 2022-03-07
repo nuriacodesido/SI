@@ -3,6 +3,7 @@ package es.udc.sistemasinteligentes.ejemplo;
 import es.udc.sistemasinteligentes.*;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 public class Estrategia4 implements EstrategiaBusqueda {
 
@@ -41,5 +42,16 @@ public class Estrategia4 implements EstrategiaBusqueda {
         }
         System.out.println((i++) + " - FIN - " + estadoActual);
         return estadoActual;
+    }
+
+
+    public Queue<Accion> reconstruye_sol(Nodo nodo){
+        Queue<Accion> solucion=null;
+        Nodo actual = nodo;
+        while(actual.getAccion()!=null){
+            solucion.add(actual.getAccion());
+            actual.setAccion((actual.getPadre()).getAccion());
+        }
+        return solucion;
     }
 }
