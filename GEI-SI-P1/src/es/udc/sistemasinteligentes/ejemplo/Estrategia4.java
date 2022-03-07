@@ -50,7 +50,6 @@ public class Estrategia4 implements EstrategiaBusqueda {
         return estadoActual;
     }
 
-
     public Queue<Accion> reconstruye_sol(Nodo nodo){
         Queue<Accion> solucion=null;
         Nodo actual = nodo;
