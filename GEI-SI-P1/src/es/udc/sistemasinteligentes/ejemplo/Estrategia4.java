@@ -14,7 +14,11 @@ public class Estrategia4 implements EstrategiaBusqueda {
     public Estado soluciona(ProblemaBusqueda p) throws Exception{
         ArrayList<Estado> explorados = new ArrayList<Estado>();
         Estado estadoActual = p.getEstadoInicial();
+        Nodo nodoactual = null;//???
+        nodoactual.setEstado(p.getEstadoInicial());//??
         explorados.add(estadoActual);
+
+
 
         int i = 1;
 
@@ -37,6 +41,8 @@ public class Estrategia4 implements EstrategiaBusqueda {
                 }
                 else
                     System.out.println((i++) + " - " + sc + " ya explorado");
+
+                reconstruye_sol(nodoactual);//???
             }
             if (!modificado) throw new Exception("No se ha podido encontrar una solución");
         }
