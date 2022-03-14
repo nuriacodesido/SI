@@ -16,9 +16,9 @@ public class Estrategia4 implements EstrategiaBusqueda {
         Estado estadoActual = p.getEstadoInicial();
         Nodo nodoActual = new Nodo(null, estadoActual, null);
         //explorados.add(estadoActual);
-        int count = 0;
-        nExplorados[0] = nodoActual;
-        boolean comprobar = false;
+        int count = -1;
+        //nExplorados[0] = nodoActual;
+        boolean yaExplorado = false;
 
         int i = 1;
 
@@ -34,11 +34,13 @@ public class Estrategia4 implements EstrategiaBusqueda {
                 count++;
                 nExplorados[count] = nodoActualSig;
                 System.out.println((i++) + " - RESULT(" + nodoActualSig.getEstado() + ","+ acc + ")=" + sc);
-                for ( int j=0; j<=nExplorados.length; j++){
+                for ( int j=0; j<=count; j++){
                     if (nExplorados[j].getEstado().equals(sc))
-                        comprobar = true;
+                        yaExplorado = true;
+                    else
+                        yaExplorado = false;
                 }
-                if (!comprobar) {
+                if (!yaExplorado) {
                     //count++;
                     nodoActualSig.setEstado(sc);
                     System.out.println((i++) + " - " + sc + " NO explorado");
@@ -50,7 +52,7 @@ public class Estrategia4 implements EstrategiaBusqueda {
                 else
                     System.out.println((i++) + " - " + sc + " ya explorado");
 
-                reconstruye_sol(nodoActual);//???
+                reconstruye_sol(nodoActualSig);//???
             }
             if (!modificado) throw new Exception("No se ha podido encontrar una solución");
         }
