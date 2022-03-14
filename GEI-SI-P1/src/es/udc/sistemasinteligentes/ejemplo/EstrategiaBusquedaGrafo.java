@@ -7,7 +7,7 @@ import es.udc.sistemasinteligentes.ProblemaBusqueda;
 public class EstrategiaBusquedaGrafo implements EstrategiaBusqueda {
 
     @Override
-    public Estado soluciona(ProblemaBusqueda p) throws Exception {
+    public Nodo[] soluciona(ProblemaBusqueda p) throws Exception {
         return null;
     }
 }

@@ -11,8 +11,9 @@ public class Estrategia4 implements EstrategiaBusqueda {
     }
 
     @Override
-    public Estado soluciona(ProblemaBusqueda p) throws Exception{
-        ArrayList<Estado> explorados = new ArrayList<Estado>();
+    public Nodo[] soluciona(ProblemaBusqueda p) throws Exception{
+        //ArrayList<Estado> explorados = new ArrayList<Estado>();
+
         Estado estadoActual = p.getEstadoInicial();
         Nodo nodoactual = null;//???
         nodoactual.setEstado(p.getEstadoInicial());//??
@@ -50,11 +51,11 @@ public class Estrategia4 implements EstrategiaBusqueda {
         return estadoActual;
     }
 
-    public Queue<Accion> reconstruye_sol(Nodo nodo){
-        Queue<Accion> solucion=null;
+    public Nodo[] reconstruye_sol(Nodo nodo){
+        Nodo[] solucion=null;
         Nodo actual = nodo;
         while(actual.getAccion()!=null){
-            solucion.add(actual.getAccion());
+            solucion.(actual.getAccion());
             actual.setAccion((actual.getPadre()).getAccion());
         }
         return solucion;
