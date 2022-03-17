@@ -11,15 +11,13 @@ public class Estrategia4 implements EstrategiaBusqueda {
 
     @Override
     public Nodo[] soluciona(ProblemaBusqueda p) throws Exception{
-        //ArrayList<Estado> explorados = new ArrayList<Estado>();
+        ArrayList<Estado> explorados = new ArrayList<Estado>();
         Nodo[] nExplorados = new Nodo[1000];
         int count = 0;//?????
-        //Estado estadoActual = p.getEstadoInicial();
         Nodo nodoActual = new Nodo(null, p.getEstadoInicial(), null);
-        //explorados.add(estadoActual);
-        //int count = -1;
-        nExplorados[0] = nodoActual;//?????
+        explorados.add(nodoActual.getEstado());
         boolean yaExplorado = false;
+
 
         int i = 1;
 
@@ -27,7 +25,6 @@ public class Estrategia4 implements EstrategiaBusqueda {
 
         while (!p.esMeta(nodoActual.getEstado())){
             System.out.println((i++) + " - " + nodoActual.getEstado() + " no es meta");
-
             Accion[] accionesDisponibles = p.acciones(nodoActual.getEstado());
             boolean modificado = false;
             for (Accion acc: accionesDisponibles) {
@@ -35,20 +32,14 @@ public class Estrategia4 implements EstrategiaBusqueda {
                 //Nodo nodoActualSig = new Nodo(nodoActual, sc, acc);
                 //count++;
                 //nExplorados[count] = nodoActual;
-                nodoActual = new Nodo(nodoActual, sc, acc);//???
-                System.out.println((i++) + " - RESULT(" + nodoActual.getPadre().getEstado() + ","+ acc + ")=" + nodoActual.getEstado());
-                for ( int j=0; (j<=count)&&(count>0); j++){//????
-                    if (nExplorados[j].getEstado().equals(sc))
-                        yaExplorado = true;
-                    else
-                        yaExplorado = false;
-                }
-                if (!yaExplorado) {
+                System.out.println((i++) + " - RESULT(" + nodoActual.getEstado() + ","+ acc + ")=" + sc);
+                if (!explorados.contains(sc)) {
                     count++;
+                    nodoActual = new Nodo(nodoActual, sc, acc);//???
                     System.out.println((i++) + " - " + nodoActual.getEstado() + " NO explorado");
+                    explorados.add(nodoActual.getEstado());
                     nExplorados[count] = nodoActual;
                     modificado = true;
-                    yaExplorado = true; //???
                     System.out.println((i++) + " - Estado actual cambiado a " + nodoActual.getEstado());
                     break;
                 }
