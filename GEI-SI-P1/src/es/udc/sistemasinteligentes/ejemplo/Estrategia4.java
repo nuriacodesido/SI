@@ -11,12 +11,11 @@ public class Estrategia4 implements EstrategiaBusqueda {
 
     @Override
     public Nodo[] soluciona(ProblemaBusqueda p) throws Exception{
-        ArrayList<Estado> explorados = new ArrayList<Estado>();
+        ArrayList<Estado> explorados = new ArrayList<>();
         Nodo[] nExplorados = new Nodo[1000];
-        int count = 0;//?????
+        int count = 0;
         Nodo nodoActual = new Nodo(null, p.getEstadoInicial(), null);
         explorados.add(nodoActual.getEstado());
-        boolean yaExplorado = false;
 
 
         int i = 1;
@@ -29,13 +28,10 @@ public class Estrategia4 implements EstrategiaBusqueda {
             boolean modificado = false;
             for (Accion acc: accionesDisponibles) {
                 Estado sc = p.result(nodoActual.getEstado(), acc);
-                //Nodo nodoActualSig = new Nodo(nodoActual, sc, acc);
-                //count++;
-                //nExplorados[count] = nodoActual;
                 System.out.println((i++) + " - RESULT(" + nodoActual.getEstado() + ","+ acc + ")=" + sc);
                 if (!explorados.contains(sc)) {
                     count++;
-                    nodoActual = new Nodo(nodoActual, sc, acc);//???
+                    nodoActual = new Nodo(nodoActual, sc, acc);
                     System.out.println((i++) + " - " + nodoActual.getEstado() + " NO explorado");
                     explorados.add(nodoActual.getEstado());
                     nExplorados[count] = nodoActual;
@@ -50,7 +46,7 @@ public class Estrategia4 implements EstrategiaBusqueda {
             if (!modificado) throw new Exception("No se ha podido encontrar una solución");
         }
         System.out.println((i++) + " - FIN - " + nodoActual.getEstado());
-        reconstruye_sol(nodoActual);//???
+        reconstruye_sol(nodoActual);
         return nExplorados;
     }
 
@@ -60,11 +56,6 @@ public class Estrategia4 implements EstrategiaBusqueda {
             solucion.add(nodo);
             nodo = nodo.getPadre();
         }
-        /*Nodo actual = nodo;
-        while(actual.getAccion()!=null){
-            solucion.add(actual);
-            actual.setAccion((actual.getPadre()).getAccion());
-        }*/
         return solucion;
     }
 }
