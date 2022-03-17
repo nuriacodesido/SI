@@ -20,28 +20,27 @@ public class EstrategiaBusquedaGrafo implements EstrategiaBusqueda {
         ArrayList<Nodo> explorados= new ArrayList<>();
         Queue<Nodo> frontera =  new LinkedList();
         Nodo nodo = new Nodo(null, p.getEstadoInicial(), null);
-        frontera.add(nodo);
         boolean modificado = false;
+
+        frontera.addAll(sucesores(nodo,p));//Expandir el nodo inicial.
 
         int i = 1;
 
         System.out.println((i++) + " - Empezando búsqueda en " + nodo.getEstado());
 
 
-        if(frontera!=null) {
-            Accion[] accionesDisponibles = p.acciones(nodo.getEstado());
-            for (Accion acc : accionesDisponibles) {
-                Estado sc = p.result(nodo.getEstado(), acc);
-                System.out.println((i++) + " - RESULT(" + nodo.getEstado() + ","+ acc + ")=" + sc);
-                frontera.remove(nodo);//Eliminar de la frontera.
-                nodo = new Nodo(nodo, sc, acc);//Escoger nodo hoja.
-                if (!p.esMeta(nodo.getEstado())) {//Si el nodo hoja no contiene estado meta
-                    System.out.println((i++) + " - "+ nodo.getEstado() + " no es meta");
+        while (!p.esMeta(nodo.getEstado())) {
+            if (frontera != null) {
+                nodo = frontera.element();//Seleccionamos nodo
+                 frontera.remove(nodo);//Eliminar de la frontera
+                 System.out.println((i++) + " - Eliminamos nodo con estado" + nodo.getEstado());
+                 if (!p.esMeta(nodo.getEstado())) {//Si el nodo hoja no contiene estado meta
+                    System.out.println((i++) + " - " + nodo.getEstado() + " no es meta");
                     explorados.add(nodo);//Añadimos el nodo al conjunto explorados
-                    System.out.println((i++) + " - Añadimos el nodo con estado"+ nodo.getEstado()+ "a explorados");
+                    System.out.println((i++) + " - Añadimos el nodo con estado" + nodo.getEstado() + "a explorados");
                     if ((!explorados.contains(nodo)) || !(frontera.contains(nodo))) {//Si el nodo no está en la frontera o en explorados.
-                        System.out.println((i++) + " - " + sc + " puede no estar explorado o no encontrarse en la frontera");
-                        ArrayList<Nodo> sucesores = sucesores(nodo,p);//Expandimos nodo
+                        System.out.println((i++) + " - " + nodo.getEstado() + " puede no estar explorado o no encontrarse en la frontera");
+                        ArrayList<Nodo> sucesores = sucesores(nodo, p);//Expandimos nodo
                         frontera.addAll(sucesores);//Añadimos los nodos resultantes a la frontera
                     }
                 } else {//Por el contrario
@@ -49,12 +48,12 @@ public class EstrategiaBusquedaGrafo implements EstrategiaBusqueda {
                     System.out.println((i++) + " - FIN - " + nodo.getEstado());
                     return reconstruye_sol(nodo);//devolvemos la solución
                 }
-            }
 
-        }else
-            throw new Exception("frontera vacía");
+            } else
+                throw new Exception("Frontera vacía");
+        }
 
-        if (modificado) throw new Exception("No se ha podido encontrar una solución");
+        if (!modificado) throw new Exception("No se ha podido encontrar una solución");
 
         return reconstruye_sol(nodo);
     }
