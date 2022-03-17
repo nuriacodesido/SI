@@ -10,6 +10,7 @@ public class Nodo {
     private Accion accion;
     private Estado estado;
 
+
     public Nodo(Nodo padre,Estado estado, Accion accion){
         this.estado=estado;
         this.padre=padre;
@@ -19,6 +20,7 @@ public class Nodo {
     public Nodo(Nodo padre){
         this(padre,null,null);
     }
+
 
     public Nodo getPadre() {
         return padre;

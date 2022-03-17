@@ -46,16 +46,15 @@ public class Estrategia4 implements EstrategiaBusqueda {
             if (!modificado) throw new Exception("No se ha podido encontrar una solución");
         }
         System.out.println((i++) + " - FIN - " + nodoActual.getEstado());
-        reconstruye_sol(nodoActual);
-        return nExplorados;
+        return reconstruye_sol(nodoActual);
     }
 
-    public ArrayList<Nodo> reconstruye_sol(Nodo nodo){
-        ArrayList<Nodo> solucion = new ArrayList<>();
-        while(nodo!=null){
-            solucion.add(nodo);
-            nodo = nodo.getPadre();
-        }
-        return solucion;
+    public Nodo[] reconstruye_sol(Nodo nodo){
+        Nodo[] node= new Nodo[1000];
+            for(int i=0;(i<node.length)&&(nodo!=null);i++) {
+                node[i] = nodo;
+                nodo = nodo.getPadre();
+            }
+        return node;
     }
 }
