@@ -22,16 +22,16 @@ public class EstrategiaBusquedaGrafo implements EstrategiaBusqueda {
         Nodo nodo = new Nodo(null, p.getEstadoInicial(), null);
         boolean modificado = false;
 
-        frontera.addAll(sucesores(nodo,p));//Expandir el nodo inicial.
+        frontera.add(nodo);//Inicializar frontera usando el estado inicial
 
         int i = 1;
 
         System.out.println((i++) + " - Empezando búsqueda en " + nodo.getEstado());
 
 
-        while (!p.esMeta(nodo.getEstado())) {
+      do {
             if (frontera != null) {
-                nodo = frontera.element();//Seleccionamos nodo
+                 nodo = frontera.element();//Seleccionamos nodo
                  frontera.remove(nodo);//Eliminar de la frontera
                  System.out.println((i++) + " - Eliminamos nodo con estado" + nodo.getEstado());
                  if (!p.esMeta(nodo.getEstado())) {//Si el nodo hoja no contiene estado meta
@@ -40,7 +40,7 @@ public class EstrategiaBusquedaGrafo implements EstrategiaBusqueda {
                     System.out.println((i++) + " - Añadimos el nodo con estado" + nodo.getEstado() + "a explorados");
                     if ((!explorados.contains(nodo)) || !(frontera.contains(nodo))) {//Si el nodo no está en la frontera o en explorados.
                         System.out.println((i++) + " - " + nodo.getEstado() + " puede no estar explorado o no encontrarse en la frontera");
-                        ArrayList<Nodo> sucesores = sucesores(nodo, p);//Expandimos nodo
+                        ArrayList<Nodo> sucesores = sucesores(nodo, p,explorados);//Expandimos nodo
                         frontera.addAll(sucesores);//Añadimos los nodos resultantes a la frontera
                     }
                 } else {//Por el contrario
@@ -51,19 +51,22 @@ public class EstrategiaBusquedaGrafo implements EstrategiaBusqueda {
 
             } else
                 throw new Exception("Frontera vacía");
-        }
+
+        } while (!p.esMeta(nodo.getEstado()));
 
         if (!modificado) throw new Exception("No se ha podido encontrar una solución");
 
         return reconstruye_sol(nodo);
     }
 
-    public ArrayList<Nodo> sucesores(Nodo nodo,ProblemaBusqueda problemaBusqueda){
+   public ArrayList<Nodo> sucesores(Nodo nodo,ProblemaBusqueda problemaBusqueda,ArrayList<Nodo> explorados){
         ArrayList<Nodo> sucesores= new ArrayList<>();
         Accion[] accionesDisponibles = problemaBusqueda.acciones(nodo.getEstado());
+
         for (Accion acc: accionesDisponibles){
             Nodo n = new Nodo(nodo, nodo.getEstado(), acc);
-            sucesores.add(n);
+            if(!explorados.contains(n))//?????
+                  sucesores.add(n);
         }
         return sucesores;
     }
