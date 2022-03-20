@@ -45,4 +45,5 @@ public class Nodo {
     public void setEstado(Estado estado) {
         this.estado = estado;
     }
+
 }

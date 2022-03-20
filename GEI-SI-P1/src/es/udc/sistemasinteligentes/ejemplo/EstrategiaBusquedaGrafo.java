@@ -17,56 +17,60 @@ public class EstrategiaBusquedaGrafo implements EstrategiaBusqueda {
 
     @Override
     public Nodo[] soluciona(ProblemaBusqueda p) throws Exception{
+        //Inicializar conjunto explorados como vacío
         ArrayList<Nodo> explorados= new ArrayList<>();
+        //Inicializar frontera usando el estado inicial del problema
         Queue<Nodo> frontera =  new LinkedList();
         Nodo nodo = new Nodo(null, p.getEstadoInicial(), null);
-        boolean modificado = false;
-
-        frontera.add(nodo);//Inicializar frontera usando el estado inicial
+        frontera.add(nodo);//Expandir el nodo inicial.
 
         int i = 1;
-
         System.out.println((i++) + " - Empezando búsqueda en " + nodo.getEstado());
 
-
-      do {
-            if (frontera != null) {
-                 nodo = frontera.element();//Seleccionamos nodo
-                 frontera.remove(nodo);//Eliminar de la frontera
-                 System.out.println((i++) + " - Eliminamos nodo con estado" + nodo.getEstado());
-                 if (!p.esMeta(nodo.getEstado())) {//Si el nodo hoja no contiene estado meta
+        //Bucle hacer
+        while (!p.esMeta(nodo.getEstado())) {
+            //Si frontera no está vacía
+            if (!frontera.isEmpty()) {
+                //Escogemos nodo hoja y lo eliminamos de la frontera
+                nodo = frontera.element();
+                frontera.remove(nodo);
+                 System.out.println((i++) + " - Eliminamos nodoHoja " + nodo.getEstado() + " de la frontera");
+                 //Si nodo hoja no contiene un estado meta
+                 if (!p.esMeta(nodo.getEstado())) {
                     System.out.println((i++) + " - " + nodo.getEstado() + " no es meta");
-                    explorados.add(nodo);//Añadimos el nodo al conjunto explorados
-                    System.out.println((i++) + " - Añadimos el nodo con estado" + nodo.getEstado() + "a explorados");
-                    if ((!explorados.contains(nodo)) || !(frontera.contains(nodo))) {//Si el nodo no está en la frontera o en explorados.
-                        System.out.println((i++) + " - " + nodo.getEstado() + " puede no estar explorado o no encontrarse en la frontera");
-                        ArrayList<Nodo> sucesores = sucesores(nodo, p,explorados);//Expandimos nodo
-                        frontera.addAll(sucesores);//Añadimos los nodos resultantes a la frontera
-                    }
-                } else {//Por el contrario
-                    modificado = true;
+                    //Añadimos el nodo al conjunto explorados
+                    explorados.add(nodo);
+                    System.out.println((i++) + " - Añadimos el nodo " + nodo.getEstado() + " a explorados");
+                    //SI los sucesores NO estan en la frontera, los añadimos
+                     ArrayList<Nodo> sucesores = sucesores(nodo, p); //Expandimos nodoHoja
+                     for (Nodo suc: sucesores) { //Para cada sucesor
+                         //Si no esta en la frontera o en explorados
+                         if (!explorados.contains(suc) || !frontera.contains(suc)) {
+                             System.out.println((i++) + " - " + suc.getEstado() + " no esta explorado ni se encuentra en la frontera");
+                             //Añadimos ese sucesor a la frontera
+                             frontera.add(suc);
+                         } else {
+                             System.out.println((i++) + " - Nodo " + nodo.getEstado() + " ya explorado");
+                         }
+                     }
+                } else { //Si nodo hoja contiene un estado meta
                     System.out.println((i++) + " - FIN - " + nodo.getEstado());
-                    return reconstruye_sol(nodo);//devolvemos la solución
+                    //Devolvemos la solución
+                    return reconstruye_sol(nodo);
                 }
 
-            } else
-                throw new Exception("Frontera vacía");
-
-        } while (!p.esMeta(nodo.getEstado()));
-
-        if (!modificado) throw new Exception("No se ha podido encontrar una solución");
-
-        return reconstruye_sol(nodo);
+            } else //Si frontera está vacía
+                throw new Exception("La frontera está vacía");
+        }
+        throw new Exception("No se encontró una meta");
     }
 
-   public ArrayList<Nodo> sucesores(Nodo nodo,ProblemaBusqueda problemaBusqueda,ArrayList<Nodo> explorados){
+    public ArrayList<Nodo> sucesores(Nodo nodo,ProblemaBusqueda problemaBusqueda){
         ArrayList<Nodo> sucesores= new ArrayList<>();
         Accion[] accionesDisponibles = problemaBusqueda.acciones(nodo.getEstado());
-
         for (Accion acc: accionesDisponibles){
-            Nodo n = new Nodo(nodo, nodo.getEstado(), acc);
-            if(!explorados.contains(n))//?????
-                  sucesores.add(n);
+            Nodo n = new Nodo(nodo, problemaBusqueda.result(nodo.getEstado(),acc), acc);
+            sucesores.add(n);
         }
         return sucesores;
     }
