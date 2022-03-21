@@ -12,64 +12,42 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
 
 
     public static class Estadocuadrado extends Estado{
-        public double[][] estadoInicial;
 
-        public enum Posicionfila {CERO,UNO,DOS};
-        public enum Posicioncolumna {CERO,UNO,DOS};
-        public enum Estado {SEGUIR,FIN};
-        public enum Posicion {
-            CERO(0,0,4),
-            UNO(0,1,9),
-            DOS(0,2,2),
-            TRES(1,0,3),
-            CUATRO(1,1,5),
-            CINCO(1,2,0),
-            SEIS(2,0,0),
-            SIETE(2,1,1),
-            OCHO(3,2,0);
+        int fila, columna, estado;
 
-            Posicion(int fila, int columna, int elemento) {
-
-            }
-        };
-
-
-     /*   public class EstadoInicial {
-            int [][]  Ej1 = {
-                    {4,9,2},
-                    {3,5,0},
-                    {0,1,0},
-            };
-        }
-*/
-
-        public class NumCasilla{
-            int [] numCasilla = {1,2,3,4,5,6,7,8,9};
-        }
-        int [] numCasilla  = {1,2,3,4,5,6,7,8,9};
-        int [] casilla = {0,0,0,0,0,0,0,0,0,0};
-
-
-        private final ProblemaCuadradoMagico.Estadocuadrado.Posicionfila posicionfila;
-        private final ProblemaCuadradoMagico.Estadocuadrado.Posicioncolumna posicioncolumna;
-        private ProblemaCuadradoMagico.Estadocuadrado.Posicion posicion;
-
-
-        public Estadocuadrado(ProblemaCuadradoMagico.Estadocuadrado.Posicionfila posicionfila,ProblemaCuadradoMagico.Estadocuadrado.Posicioncolumna posicioncolumna,ProblemaCuadradoMagico.Estadocuadrado.Posicion posicion){
-           this.posicionfila = posicionfila;
-            this.posicioncolumna = posicioncolumna;
-            this.posicion = posicion;
+        public enum Check{SEGUIR, FINALIZAR};
+        private Check check;
+        public Estadocuadrado(int fila, int columna, int estado, ProblemaCuadradoMagico.Estadocuadrado.Check check){
+            this.fila = fila;
+            this.columna = columna;
+            this.estado = estado;
+            this.check = check;
 
         }
-        public Estadocuadrado(ProblemaCuadradoMagico.Estadocuadrado.Posicionfila posicionfila, ProblemaCuadradoMagico.Estadocuadrado.Posicioncolumna posicioncolumna, int[][] estadoInicialEj, int[] numCasilla, int[] casilla,ProblemaCuadradoMagico.Estadocuadrado.Estado estado) {
-            this.posicionfila = posicionfila;
-            this.posicioncolumna = posicioncolumna;
-            this.estadoInicialEj1 = estadoInicialEj;
-            this.numCasilla = numCasilla;
-            this.casilla = casilla;
+
+        public int getFila() {
+            return fila;
+        }
+
+        public void setFila(int fila) {
+            this.fila = fila;
+        }
+
+        public int getColumna() {
+            return columna;
+        }
+
+        public void setColumna(int columna) {
+            this.columna = columna;
+        }
+
+        public int getEstado() {
+            return estado;
+        }
+
+        public void setEstado(int estado) {
             this.estado = estado;
         }
-
 
         @Override
         public String toString() {
@@ -79,18 +57,14 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Estadocuadrado)) return false;
+            if (o == null || getClass() != o.getClass()) return false;
             Estadocuadrado that = (Estadocuadrado) o;
-            return Arrays.equals(numCasilla, that.numCasilla) && Arrays.equals(casilla, that.casilla) && Arrays.equals(estadoInicialEj1, that.estadoInicialEj1) && posicionfila == that.posicionfila && posicioncolumna == that.posicioncolumna && estado == that.estado;
+            return fila == that.fila && columna == that.columna && estado == that.estado && check == that.check;
         }
 
         @Override
         public int hashCode() {
-            int result = Objects.hash(posicionfila, posicioncolumna, estado);
-            result = 31 * result + Arrays.hashCode(numCasilla);
-            result = 31 * result + Arrays.hashCode(casilla);
-            result = 31 * result + Arrays.hashCode(estadoInicialEj1);
-            return result;
+            return Objects.hash(fila, columna, estado, check);
         }
     }
 
