@@ -19,8 +19,7 @@ public class EstrategiaBusquedaAmplitud implements EstrategiaBusqueda {
     @Override
     public Nodo[] soluciona(ProblemaBusqueda p) throws Exception{
         ArrayList<Nodo> explorados= new ArrayList<>();
-        //Queue<Nodo> frontera =  new LinkedList();
-        ArrayList<Nodo> frontera= new ArrayList<>();
+        Queue<Nodo> frontera =  new LinkedList();
         Nodo nodo = new Nodo(null, p.getEstadoInicial(), null);
         ArrayList<Nodo> sucesores = new ArrayList<>();
 
@@ -34,7 +33,7 @@ public class EstrategiaBusquedaAmplitud implements EstrategiaBusqueda {
         while (!p.esMeta(nodo.getEstado())){
             System.out.println((i++) + " - " + nodo.getEstado() + " no es meta");
             if(frontera!=null){//Si la frontera no está vacía.
-                nodo = frontera.get(frontera.size()-1);//??? //Obtenemos el último elemento de frontera
+                nodo = frontera.element();//??? //Obtenemos el último elemento de frontera
                 frontera.remove(nodo);//Eliminamos el último elemento
                 if(!p.esMeta(nodo.getEstado())){
                     explorados.add(nodo);

@@ -115,19 +115,19 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
             int posicioncolumna = esCu.columna;
             int n;
 
-            if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.IZQ) && (posicionfila == 0)) {//En caso de que la posicion sea 0 no nos movemos. (fila)
+            if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.IZQ) && (posicioncolumna == 0)) {//En caso de que la posicion sea 0 no nos movemos. (fila)
                 //No nos movemos
             } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.IZQ)) {//Si nos movemos a la izq, restamos a la posición inicial -1 (fila)
                 posicioncolumna--;
-            } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.DER) && (posicionfila== matriz.length)) {//En caso de que corresponda con la última posición (fila)
+            } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.DER) && (posicioncolumna== matriz.length)) {//En caso de que corresponda con la última posición (fila)
                 //No nos movemos
             } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.DER)) {//Si nos movemos a la der, sumamos a la posición inicial +1 (fila)
                 posicioncolumna++;
-            } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.Abajo) && (posicioncolumna== matriz.length)){//En caso de que corresponda con la última posición  (columna)
+            } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.Abajo) && (posicionfila== matriz.length)){//En caso de que corresponda con la última posición  (columna)
                 //No nos movemos
             }else if ((accion== ProblemaCuadradoMagico.AccionCuadrado.Accion.Abajo)) {//Si nos movemos, sumamos +1 (columna)
                 posicionfila++;
-            }else if ((accion== ProblemaCuadradoMagico.AccionCuadrado.Accion.Arriba)&&(posicioncolumna == 0)) {//En caso de que corresponda con la última posición  (columna)
+            }else if ((accion== ProblemaCuadradoMagico.AccionCuadrado.Accion.Arriba)&&(posicionfila == 0)) {//En caso de que corresponda con la última posición  (columna)
                 //No nos movemos
             }else if ((accion== ProblemaCuadradoMagico.AccionCuadrado.Accion.Arriba)) {//Si nos movemos, sumamos +1 (columna)
                 posicionfila--;
@@ -183,7 +183,7 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
             for(int i=0;i<esCu.dimension;i++){
                 for(int j=0;j<esCu.dimension;j++){
                     if(esCu.matriz[i][j]!=0)
-                        arrayDisp[esCu.matriz[i][j]]=1;
+                        arrayDisp[(esCu.matriz[i][j])-1]=1;
                 }
             }
 
@@ -194,31 +194,31 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
 
                     if ((casillasVaciasColumna == 0) && (casillasVaciasFila == 0)) {//En caso de que solamente (fila&columna) haya una casilla vacía, la que tenemos que llenar
                         //No hace falta comprobar en ArrayDisp, ya que al tener todas las casillas ocupadas excepto la que tenemos que rellenar,( solamente hay una solución)
-                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[(sumaTotal) - sumafila];//Es la suma de todos los nums de la fila/columna (excepto la casilla que tenemos que llenar) junto la resta con la sumaTotal.
+                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[((sumaTotal) - sumafila)-1];//Es la suma de todos los nums de la fila/columna (excepto la casilla que tenemos que llenar) junto la resta con la sumaTotal.
 
-                    } else if ((casillasVaciasColumna == 0) && (casillasVaciasFila > 1)) {//En caso de que en la fila haya más de una casilla sin rellenar, elegimos cualquier num aleatorio (sin que sume igual a sumaTotal, debido a que aparte de la casilla que debemos rellenar, aún queda otra casilla vacía)
-                        numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+                    } else if ((casillasVaciasColumna == 0) && (casillasVaciasFila >= 1)) {//En caso de que en la fila haya más de una casilla sin rellenar, elegimos cualquier num aleatorio (sin que sume igual a sumaTotal, debido a que aparte de la casilla que debemos rellenar, aún queda otra casilla vacía)
+                        numAleatorioCasilla = (int) (Math.random() * ((esCu.dimension*esCu.dimension) + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
 
-                        while ((arrayDisp[numAleatorioCasilla] == 1) && (sumafila + numAleatorioCasilla >= sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
-                            numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+                        while ((numAleatorioCasilla==0)||(arrayDisp[numAleatorioCasilla-1] == 1) || (sumafila + numAleatorioCasilla >= sumaTotal)||(sumacolumna+numAleatorioCasilla!=sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
+                            numAleatorioCasilla = (int) (Math.random() * ((esCu.dimension*esCu.dimension) + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
 
-                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[numAleatorioCasilla];//La casilla a llenar con el num aleatorio
+                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[numAleatorioCasilla-1];//La casilla a llenar con el num aleatorio
 
-                    } else if ((casillasVaciasColumna > 1) && (casillasVaciasFila == 0)) {
-                        numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+                    } else if ((casillasVaciasColumna >= 1) && (casillasVaciasFila == 0)) {
+                        numAleatorioCasilla = (int) (Math.random() * ((esCu.dimension*esCu.dimension) + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
 
-                        while ((arrayDisp[numAleatorioCasilla] == 1) && (sumacolumna + numAleatorioCasilla >= sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
-                            numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+                        while ((numAleatorioCasilla==0)||(arrayDisp[numAleatorioCasilla-1] == 1) || (sumacolumna + numAleatorioCasilla >= sumaTotal)||(sumafila+numAleatorioCasilla!=sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
+                            numAleatorioCasilla = (int) (Math.random() * ((esCu.dimension*esCu.dimension)+ 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
 
-                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[numAleatorioCasilla];//La casilla a llenar con el num aleatorio
+                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[numAleatorioCasilla-1];//La casilla a llenar con el num aleatorio
 
                     } else {
-                        numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+                        numAleatorioCasilla = (int) (Math.random() * ((esCu.dimension*esCu.dimension) + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
 
-                        while ((arrayDisp[numAleatorioCasilla] == 1) && (sumafila + numAleatorioCasilla >= sumaTotal) && (sumacolumna + numAleatorioCasilla >= sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
-                            numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+                        while ((numAleatorioCasilla==0)||(arrayDisp[numAleatorioCasilla-1] == 1) || (sumafila + numAleatorioCasilla >= sumaTotal)||(sumacolumna + numAleatorioCasilla != sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
+                            numAleatorioCasilla = (int) (Math.random() * ((esCu.dimension*esCu.dimension)+ 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
 
-                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[numAleatorioCasilla];//La casilla a llenar con el num aleatorio
+                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[numAleatorioCasilla-1];//La casilla a llenar con el num aleatorio
 
                     }
                 }
