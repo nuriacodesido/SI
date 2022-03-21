@@ -13,8 +13,8 @@ public class MainEj2a {
         EstrategiaBusqueda buscador = new EstrategiaBusquedaAmplitud();
         System.out.println(buscador.soluciona(cuadradoMagico));
 
-        EstrategiaBusqueda buscador2 = new EstrategiaBusquedaProfundidad();
-        System.out.println(buscador2.soluciona(cuadradoMagico));
+      /*  EstrategiaBusqueda buscador2 = new EstrategiaBusquedaProfundidad();
+        System.out.println(buscador2.soluciona(cuadradoMagico));*/
     }
 
 }

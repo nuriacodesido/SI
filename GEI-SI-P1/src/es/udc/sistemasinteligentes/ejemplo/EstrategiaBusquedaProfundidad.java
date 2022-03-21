@@ -35,10 +35,14 @@ public class EstrategiaBusquedaProfundidad implements EstrategiaBusqueda {
                 if(!p.esMeta(nodo.getEstado())){
                     explorados.add(nodo);
                     sucesores = sucesores(nodo,p);
-                    for(int j=0;j< sucesores.size();j++){//Recorremos el array sucesores
-                        if(!(frontera.contains(sucesores.get(j))&&(explorados.contains(sucesores.get(j))))) {//Realizamos la comprobacion de si no se encuentra en frontera ni en explorados
-                            frontera.add(sucesores.get(j));//Insertamos el elemento sucesor
-                            System.out.println((i++) + " - Añadimos a la frontera el nodo sucesor con estado- " + nodo.getEstado());
+                       for (Nodo suc: sucesores) { //Para cada sucesor
+                        //Si no esta en la frontera o en explorados
+                        if (!explorados.contains(suc) && !frontera.contains(suc)) {
+                            System.out.println((i++) + " - " + suc.getEstado() + " no esta explorado ni se encuentra en la frontera");
+                            //Añadimos ese sucesor a la frontera
+                            frontera.add(suc);
+                        } else {
+                            System.out.println((i++) + " - Nodo " + nodo.getEstado() + " ya explorado");
                         }
                     }
                 }else

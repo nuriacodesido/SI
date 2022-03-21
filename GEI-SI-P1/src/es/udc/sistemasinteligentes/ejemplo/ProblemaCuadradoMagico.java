@@ -133,11 +133,13 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
                 posicionfila--;
             }
 
-            n = numAleatorio(esCu,posicionfila,posicioncolumna);
-            if(n!=-1)
-                matriz[posicionfila][posicioncolumna] = n;
-            else
-                esCu.check = Estadocuadrado.Check.FINALIZAR;
+            if(esCu.matriz[posicionfila][posicioncolumna]==0) {//Si la casilla está vacía
+                n = numAleatorio(esCu, posicionfila, posicioncolumna);
+                if (n != -1)
+                    matriz[posicionfila][posicioncolumna] = n;
+                else
+                    esCu.check = Estadocuadrado.Check.FINALIZAR;
+            }
 
             return new ProblemaCuadradoMagico.Estadocuadrado(matriz,matriz.length,esCu.check,posicionfila,posicioncolumna);
 
@@ -173,8 +175,8 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
             //1. Contiene todos los numeros que debemos utilizar para rellenar todas las casillas. (1-...)
             //2.Array que nos permite comprobar, que numeros están siendo utilizados y cuales no.
             for(int i=1;i<=(esCu.dimension* esCu.dimension);i++){
-                arrayNum[i] = i;
-                arrayDisp[i]=0;
+                arrayNum[i-1] = i;
+                arrayDisp[i-1]=0;
             }
 
             //rellenamos el arrayDisp (1-posición ocupada) (0-posición vacía)
