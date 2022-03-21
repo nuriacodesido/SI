@@ -13,16 +13,18 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
 
     public static class Estadocuadrado extends Estado{
 
-        int fila, columna, estado;
+        int dimension,fila,columna;
+        int [][] matriz;
 
-        public enum Check{SEGUIR, FINALIZAR};
+        public enum Check{SEGUIR, FINALIZAR};//?
+
         private Check check;
-        public Estadocuadrado(int fila, int columna, int estado, ProblemaCuadradoMagico.Estadocuadrado.Check check){
-            this.fila = fila;
-            this.columna = columna;
-            this.estado = estado;
+        public Estadocuadrado(int [][] matriz, int dimension,ProblemaCuadradoMagico.Estadocuadrado.Check check,int fila,int columna){
+            this.matriz = matriz;
+            this.dimension = dimension;
             this.check = check;
-
+            this.fila= fila;
+            this.columna=columna;
         }
 
         public int getFila() {
@@ -41,30 +43,48 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
             this.columna = columna;
         }
 
-        public int getEstado() {
-            return estado;
+        public int getDimension() {
+            return dimension;
         }
 
-        public void setEstado(int estado) {
-            this.estado = estado;
+        public void setDimension(int dimension) {
+            this.dimension = dimension;
+        }
+
+        public int[][] getMatriz() {
+            return matriz;
+        }
+
+        public void setMatriz(int[][] matriz) {
+            this.matriz = matriz;
+        }
+
+        public Check getCheck() {
+            return check;
+        }
+
+        public void setCheck(Check check) {
+            this.check = check;
         }
 
         @Override
         public String toString() {
-            return "(" + posicionfila + "," + posicioncolumna + ')';
+            return "(" + fila + "," + columna + ')';
         }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (!(o instanceof Estadocuadrado)) return false;
             Estadocuadrado that = (Estadocuadrado) o;
-            return fila == that.fila && columna == that.columna && estado == that.estado && check == that.check;
+            return getDimension() == that.getDimension() && getFila() == that.getFila() && getColumna() == that.getColumna() && Arrays.equals(getMatriz(), that.getMatriz()) && getCheck() == that.getCheck();
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(fila, columna, estado, check);
+            int result = Objects.hash(getDimension(), getFila(), getColumna(), getCheck());
+            result = 31 * result + Arrays.hashCode(getMatriz());
+            return result;
         }
     }
 
@@ -90,97 +110,117 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
         @Override
         public Estado aplicaA(Estado es) {
             ProblemaCuadradoMagico.Estadocuadrado esCu = (ProblemaCuadradoMagico.Estadocuadrado) es;
-            ProblemaCuadradoMagico.Estadocuadrado.Posicionfila nuevaPosicionFila = esCu.posicionfila;
-            ProblemaCuadradoMagico.Estadocuadrado.Posicioncolumna nuevaPosicionColumna = esCu.posicioncolumna;
-           esCu.estado = Estadocuadrado.Estado.SEGUIR;
+            int [][] matriz = esCu.matriz;
+            int posicionfila = esCu.fila;
+            int posicioncolumna = esCu.columna;
             int n;
 
-            if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.IZQ) && (esCu.posicionfila == Estadocuadrado.Posicionfila.CERO)) {//En caso de que la posicion sea 0 no nos movemos. (fila)
+            if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.IZQ) && (posicionfila == 0)) {//En caso de que la posicion sea 0 no nos movemos. (fila)
                 //No nos movemos
             } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.IZQ)) {//Si nos movemos a la izq, restamos a la posición inicial -1 (fila)
-                nuevaPosicionFila = ProblemaCuadradoMagico.Estadocuadrado.Posicionfila.values()[esCu.posicionfila.ordinal() - 1];
-            } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.DER) && (esCu.posicionfila.ordinal() == Estadocuadrado.Posicionfila.values().length)) {//En caso de que corresponda con la última posición (fila)
+                posicioncolumna--;
+            } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.DER) && (posicionfila== matriz.length)) {//En caso de que corresponda con la última posición (fila)
                 //No nos movemos
             } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.DER)) {//Si nos movemos a la der, sumamos a la posición inicial +1 (fila)
-                nuevaPosicionFila = ProblemaCuadradoMagico.Estadocuadrado.Posicionfila.values()[esCu.posicionfila.ordinal() + 1];
-            } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.Abajo) && (esCu.posicioncolumna.ordinal() == Estadocuadrado.Posicioncolumna.values().length)){//En caso de que corresponda con la última posición  (columna)
+                posicioncolumna++;
+            } else if ((accion == ProblemaCuadradoMagico.AccionCuadrado.Accion.Abajo) && (posicioncolumna== matriz.length)){//En caso de que corresponda con la última posición  (columna)
                 //No nos movemos
-            }else if ((accion== ProblemaCuadradoMagico.AccionCuadrado.Accion.Abajo)) {//Si nos movemos, sumamos -1 (columna)
-                nuevaPosicionColumna = ProblemaCuadradoMagico.Estadocuadrado.Posicioncolumna.values()[esCu.posicioncolumna.ordinal() + 1];//No nos movemos
-            }else if ((accion== ProblemaCuadradoMagico.AccionCuadrado.Accion.Arriba)&&(esCu.posicioncolumna == Estadocuadrado.Posicioncolumna.CERO)) {//En caso de que corresponda con la última posición  (columna)
+            }else if ((accion== ProblemaCuadradoMagico.AccionCuadrado.Accion.Abajo)) {//Si nos movemos, sumamos +1 (columna)
+                posicionfila++;
+            }else if ((accion== ProblemaCuadradoMagico.AccionCuadrado.Accion.Arriba)&&(posicioncolumna == 0)) {//En caso de que corresponda con la última posición  (columna)
                 //No nos movemos
             }else if ((accion== ProblemaCuadradoMagico.AccionCuadrado.Accion.Arriba)) {//Si nos movemos, sumamos +1 (columna)
-                nuevaPosicionColumna = ProblemaCuadradoMagico.Estadocuadrado.Posicioncolumna.values()[esCu.posicioncolumna.ordinal() - 1];
+                posicionfila--;
             }
 
-            n = numAleatorio(esCu,nuevaPosicionFila,nuevaPosicionColumna);
+            n = numAleatorio(esCu,posicionfila,posicioncolumna);
             if(n!=-1)
-                esCu.estadoInicialEj1[nuevaPosicionFila.ordinal()][nuevaPosicionColumna.ordinal()] = n;
+                matriz[posicionfila][posicioncolumna] = n;
             else
-                esCu.estado = Estadocuadrado.Estado.FIN;
+                esCu.check = Estadocuadrado.Check.FINALIZAR;
 
-            return new ProblemaCuadradoMagico.Estadocuadrado(nuevaPosicionFila,nuevaPosicionColumna,esCu.estadoInicialEj1,esCu.numCasilla, esCu.casilla,esCu.estado);
+            return new ProblemaCuadradoMagico.Estadocuadrado(matriz,matriz.length,esCu.check,posicionfila,posicioncolumna);
 
         }
 
-        public int numAleatorio( ProblemaCuadradoMagico.Estadocuadrado esCu, ProblemaCuadradoMagico.Estadocuadrado.Posicionfila nuevaPosicionFila,ProblemaCuadradoMagico.Estadocuadrado.Posicioncolumna nuevaPosicionColumna){
-            int sumaTotal = ((Estadocuadrado.Posicioncolumna.values().length)*((int)(Math.pow(Estadocuadrado.Posicioncolumna.values().length,2))+1))/2;
+        public int numAleatorio( ProblemaCuadradoMagico.Estadocuadrado esCu, int posicionfila,int posicioncolumna){
+            int sumaTotal = ((esCu.matriz.length)*((int)(Math.pow(esCu.matriz.length,2))+1))/2;
             int sumafila=0;
             int sumacolumna=0;
             int casillasVaciasFila = -1;
             int casillasVaciasColumna = -1;
             int numAleatorioCasilla = 0;
+            int [] arrayNum = new int[esCu.dimension* esCu.dimension];
+            int [] arrayDisp = new int[esCu.dimension* esCu.dimension];
 
-
-            for(int i=0;i<Estadocuadrado.Posicionfila.values().length;i++) {//Recorremos matriz ->solo esa (fila)
-                sumafila += esCu.estadoInicialEj1[i][nuevaPosicionColumna.ordinal()];
+            for(int i=0;i<esCu.matriz.length;i++) {//Recorremos matriz ->solo esa (fila)
+                sumafila += esCu.matriz[posicionfila][i];
 
                 //Comprobamos cuantas casillas están vacías
-                if(esCu.estadoInicialEj1[i][nuevaPosicionColumna.ordinal()]==0)
+                if(esCu.matriz[posicionfila][i]==0)
                     casillasVaciasFila++;
-                else //En caso de que no estén vacías
-                    esCu.casilla[esCu.estadoInicialEj1[i][nuevaPosicionColumna.ordinal()]] = 1;//Si utilizamos un número, ponemos ese estado como ocupado
             }
 
-            for (int j = 0;j<Estadocuadrado.Posicioncolumna.values().length; j++) {//Recorremos matriz ->solo esa (columna)
-                sumacolumna += esCu.estadoInicialEj1[nuevaPosicionFila.ordinal()][j];
+            for (int j = 0;j<esCu.matriz.length; j++) {//Recorremos matriz ->solo esa (columna)
+                sumacolumna += esCu.matriz[j][posicioncolumna];
 
                 //Comprobamos cuantas casillas están vacías
-                if (esCu.estadoInicialEj1[nuevaPosicionFila.ordinal()][j]==0)
+                if (esCu.matriz[j][posicioncolumna]==0)
                     casillasVaciasColumna++;
-                else//En caso de que no estén vacías
-                    esCu.casilla[esCu.estadoInicialEj1[nuevaPosicionFila.ordinal()][j]] = 1;//Si utilizamos un número, ponemos ese estado como ocupado
+            }
+
+            //Creamos los arrays
+            //1. Contiene todos los numeros que debemos utilizar para rellenar todas las casillas. (1-...)
+            //2.Array que nos permite comprobar, que numeros están siendo utilizados y cuales no.
+            for(int i=1;i<=(esCu.dimension* esCu.dimension);i++){
+                arrayNum[i] = i;
+                arrayDisp[i]=0;
+            }
+
+            //rellenamos el arrayDisp (1-posición ocupada) (0-posición vacía)
+            for(int i=0;i<esCu.dimension;i++){
+                for(int j=0;j<esCu.dimension;j++){
+                    if(esCu.matriz[i][j]!=0)
+                        arrayDisp[esCu.matriz[i][j]]=1;
+                }
             }
 
             //Averiguar que elemento introducimos en la casilla
             if(!((casillasVaciasColumna==-1)&&(casillasVaciasFila==-1))) {
 
-                if (esCu.EstadoInicial[nuevaPosicionFila.ordinal()][nuevaPosicionColumna.ordinal()] == 0) {//Si la casilla está vacía
+                if (esCu.matriz[posicionfila][posicioncolumna] == 0) {//Caso de que la casilla esté vacía.
 
-                    if ((casillasVaciasColumna == 0) && (casillasVaciasFila == 0))//En caso de que solamente (fila&columna) haya una casilla vacía, la que tenemos que llenar
-                        esCu.estadoInicialEj1[nuevaPosicionFila.ordinal()][nuevaPosicionColumna.ordinal()] = esCu.numCasilla[(sumaTotal) - sumafila];//Es la suma de todos los nums de la fila/columna (excepto la casilla que tenemos que llenar) junto la resta con la sumaTotal.
-                    else if ((casillasVaciasColumna == 0) && (casillasVaciasFila > 1)) {//En caso de que en la fila haya más de una casilla sin rellenar, elegimos cualquier num aleatorio (sin que sume igual a sumaTotal)
+                    if ((casillasVaciasColumna == 0) && (casillasVaciasFila == 0)) {//En caso de que solamente (fila&columna) haya una casilla vacía, la que tenemos que llenar
+                        //No hace falta comprobar en ArrayDisp, ya que al tener todas las casillas ocupadas excepto la que tenemos que rellenar,( solamente hay una solución)
+                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[(sumaTotal) - sumafila];//Es la suma de todos los nums de la fila/columna (excepto la casilla que tenemos que llenar) junto la resta con la sumaTotal.
 
-                        while ((esCu.casilla[numAleatorioCasilla] != 0) && (sumafila + numAleatorioCasilla < sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
-                            numAleatorioCasilla = (int) (Math.random() * (esCu.numCasilla.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+                    } else if ((casillasVaciasColumna == 0) && (casillasVaciasFila > 1)) {//En caso de que en la fila haya más de una casilla sin rellenar, elegimos cualquier num aleatorio (sin que sume igual a sumaTotal, debido a que aparte de la casilla que debemos rellenar, aún queda otra casilla vacía)
+                        numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
 
-                        esCu.estadoInicialEj1[nuevaPosicionFila.ordinal()][nuevaPosicionColumna.ordinal()] = esCu.numCasilla[numAleatorioCasilla];//La casilla a llenar con el num aleatorio
+                        while ((arrayDisp[numAleatorioCasilla] == 1) && (sumafila + numAleatorioCasilla >= sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
+                            numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+
+                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[numAleatorioCasilla];//La casilla a llenar con el num aleatorio
 
                     } else if ((casillasVaciasColumna > 1) && (casillasVaciasFila == 0)) {
-                        while ((esCu.casilla[numAleatorioCasilla] != 0) && (sumacolumna + numAleatorioCasilla < sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
-                            numAleatorioCasilla = (int) (Math.random() * (esCu.numCasilla.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+                        numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
 
-                        esCu.estadoInicialEj1[nuevaPosicionFila.ordinal()][nuevaPosicionColumna.ordinal()] = esCu.numCasilla[numAleatorioCasilla];//La casilla a llenar con el num aleatorio
+                        while ((arrayDisp[numAleatorioCasilla] == 1) && (sumacolumna + numAleatorioCasilla >= sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
+                            numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+
+                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[numAleatorioCasilla];//La casilla a llenar con el num aleatorio
 
                     } else {
-                        while ((esCu.casilla[numAleatorioCasilla] != 0) && (sumafila + numAleatorioCasilla < sumaTotal) && (sumacolumna + numAleatorioCasilla < sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
-                            numAleatorioCasilla = (int) (Math.random() * (esCu.numCasilla.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+                        numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
 
-                        esCu.estadoInicialEj1[nuevaPosicionFila.ordinal()][nuevaPosicionColumna.ordinal()] = esCu.numCasilla[numAleatorioCasilla];//La casilla a llenar con el num aleatorio
+                        while ((arrayDisp[numAleatorioCasilla] == 1) && (sumafila + numAleatorioCasilla >= sumaTotal) && (sumacolumna + numAleatorioCasilla >= sumaTotal))//Comprobamos si ese número está siendo utilizado y la suma de las casillas que no están vacías más el num aleatorio es mayor o igual a la sumaTotal
+                            numAleatorioCasilla = (int) (Math.random() * (esCu.matriz.length + 1));//Creamos num aleatorio entre 1 y la longitud max. (1-9)
+
+                        esCu.matriz[posicionfila][posicioncolumna] = arrayNum[numAleatorioCasilla];//La casilla a llenar con el num aleatorio
 
                     }
                 }
-                return esCu.estadoInicialEj1[esCu.posicionfila.ordinal()][esCu.posicioncolumna.ordinal()];
+                return esCu.matriz[posicionfila][posicioncolumna];
             }
             return -1;
         }
@@ -202,7 +242,7 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
 
     @Override
     public boolean esMeta(Estado es) {
-        return ((Estadocuadrado) es).estado == Estadocuadrado.Estado.FIN;
+        return ((Estadocuadrado) es).check == Estadocuadrado.Check.FINALIZAR;
     }
 
 

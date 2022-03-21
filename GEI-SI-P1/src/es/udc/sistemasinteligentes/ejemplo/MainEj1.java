@@ -13,7 +13,7 @@ public class MainEj1 {
         EstrategiaBusqueda buscador = new Estrategia4();
         System.out.println(buscador.soluciona(aspiradora));
 
-      /*  EstrategiaBusqueda buscador2 = new EstrategiaBusquedaGrafo();
-        System.out.println(buscador2.soluciona(aspiradora));*/
+        EstrategiaBusqueda buscador2 = new EstrategiaBusquedaGrafo();
+        System.out.println(buscador2.soluciona(aspiradora));
     }
 }
