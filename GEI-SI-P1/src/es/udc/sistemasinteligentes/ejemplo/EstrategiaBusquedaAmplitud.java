@@ -22,6 +22,7 @@ public class EstrategiaBusquedaAmplitud implements EstrategiaBusqueda {
         Queue<Nodo> frontera =  new LinkedList();
         Nodo nodo = new Nodo(null, p.getEstadoInicial(), null);
         ArrayList<Nodo> sucesores = new ArrayList<>();
+        int numExplorados=0,numNodosCreados=0;
 
         frontera.add(nodo);//Inicializar frontera usando el estado inicial
 
@@ -33,27 +34,35 @@ public class EstrategiaBusquedaAmplitud implements EstrategiaBusqueda {
         while (!p.esMeta(nodo.getEstado())){
             System.out.println((i++) + " - " + nodo.getEstado() + " no es meta");
             if(frontera!=null){//Si la frontera no está vacía.
-                nodo = frontera.element();//??? //Obtenemos el último elemento de frontera
+                //FIFO-> primero en entrar, primero en salir
+                nodo = frontera.element();
                 frontera.remove(nodo);//Eliminamos el último elemento
                 if(!p.esMeta(nodo.getEstado())){
                     explorados.add(nodo);
+                    numExplorados++;
                     sucesores = sucesores(nodo,p);
                     for (Nodo suc: sucesores) { //Para cada sucesor
+                        numNodosCreados++;
                         //Si no esta en la frontera o en explorados
-                        if (!explorados.contains(suc) && !frontera.contains(suc)) {
-                            System.out.println((i++) + " - " + suc.getEstado() + " no esta explorado ni se encuentra en la frontera");
+                        if ((!explorados.contains(suc)) && (!frontera.contains(suc))) {
+                            System.out.println((i++) + " - " + suc.getEstado() + " no esta explorado ni se encuentra en la frontera, lo añadimos a frontera");
                             //Añadimos ese sucesor a la frontera
                             frontera.add(suc);
                         } else {
                             System.out.println((i++) + " - Nodo " + nodo.getEstado() + " ya explorado");
                         }
                     }
-                }else
+                }else {
+                    System.out.println((i++)+ " - Num de nodos expandidos: " + numExplorados);
+                    System.out.println((i++) +  " - Num de nodos creados: " +numNodosCreados);
                     System.out.println((i++) + " - FIN - " + nodo.getEstado());
+                }
             }else //Por el contrario si está vacía
                 throw new Exception("Frontera vacía");
 
         }
+        System.out.println((i++)+ " - Num de nodos expandidos: " + numExplorados);
+        System.out.println((i++) +  " - Num de nodos creados: " +numNodosCreados);
         System.out.println((i++) + " - FIN - " + nodo.getEstado());
         return reconstruye_sol(nodo);
 

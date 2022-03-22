@@ -16,9 +16,11 @@ public class EstrategiaBusquedaProfundidad implements EstrategiaBusqueda {
     @Override
     public Nodo[] soluciona(ProblemaBusqueda p) throws Exception{
         ArrayList<Nodo> explorados= new ArrayList<>();
-        Queue<Nodo> frontera =  new LinkedList();
+        ArrayList<Nodo> frontera= new ArrayList<>();
+        //Queue<Nodo> frontera =  new LinkedList();
         Nodo nodo = new Nodo(null, p.getEstadoInicial(), null);
         ArrayList<Nodo> sucesores = new ArrayList<>();
+        int numExplorados=0,numNodosCreados=0;
 
         frontera.add(nodo);//Inicializar frontera usando el estado inicial
 
@@ -30,14 +32,17 @@ public class EstrategiaBusquedaProfundidad implements EstrategiaBusqueda {
         while (!p.esMeta(nodo.getEstado())){
             System.out.println((i++) + " - " + nodo.getEstado() + " no es meta");
             if(frontera!=null){//Si la frontera no está vacía.
-                nodo = frontera.element();//Obtenemos el siguiente elemento introducido (siguiendo el camino)
+                //LIFO -> primero en entrar, último en salir
+                nodo = frontera.get(frontera.size()-1);
                 frontera.remove(nodo);//Lo eliminamos dela frontera.
                 if(!p.esMeta(nodo.getEstado())){
                     explorados.add(nodo);
+                    numExplorados++;
                     sucesores = sucesores(nodo,p);
                        for (Nodo suc: sucesores) { //Para cada sucesor
+                           numNodosCreados++;
                         //Si no esta en la frontera o en explorados
-                        if (!explorados.contains(suc) && !frontera.contains(suc)) {
+                        if ((!explorados.contains(suc)) && (!frontera.contains(suc))) {
                             System.out.println((i++) + " - " + suc.getEstado() + " no esta explorado ni se encuentra en la frontera");
                             //Añadimos ese sucesor a la frontera
                             frontera.add(suc);
@@ -45,12 +50,17 @@ public class EstrategiaBusquedaProfundidad implements EstrategiaBusqueda {
                             System.out.println((i++) + " - Nodo " + nodo.getEstado() + " ya explorado");
                         }
                     }
-                }else
+                }else {
+                    System.out.println((i++)+ " - Num de nodos expandidos: " + numExplorados);
+                    System.out.println((i++) +  " - Num de nodos creados: " +numNodosCreados);
                     System.out.println((i++) + " - FIN - " + nodo.getEstado());
+                }
             }else //Por el contrario si está vacía
                 throw new Exception("Frontera vacía");
 
         }
+        System.out.println((i++)+ " - Num de nodos expandidos: " + numExplorados);
+        System.out.println((i++) +  " - Num de nodos creados: " +numNodosCreados);
         System.out.println((i++) + " - FIN - " + nodo.getEstado());
         return reconstruye_sol(nodo);
 
