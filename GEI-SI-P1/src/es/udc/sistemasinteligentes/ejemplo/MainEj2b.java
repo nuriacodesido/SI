@@ -11,8 +11,7 @@ public class MainEj2b {
         //int [][] matriz = new int[][]{{2, 0, 0}, {0, 0, 0}, {0, 0, 0}};
         ProblemaCuadradoMagico.Estadocuadrado estadoInicial = new ProblemaCuadradoMagico.Estadocuadrado(matriz,3,ProblemaCuadradoMagico.Estadocuadrado.Check.SEGUIR,0,0);
         ProblemaCuadradoMagico cuadradoMagico = new ProblemaCuadradoMagico(estadoInicial);
-        HeuristicaCuadradoMagico heuristicaCuadradoMagico = new HeuristicaCuadradoMagico(heuristicaCuadradoMagico.evalua(estadoInicial));
-        heuristicaCuadradoMagico.evalua(estadoInicial);
+        HeuristicaCuadradoMagico heuristicaCuadradoMagico = new HeuristicaCuadradoMagico(estadoInicial);
 
         System.out.println(" - ESTRATEGIA BUSQUEDA ESTRELLA - ");
         EstrategiaBusquedaEstrella buscador = new EstrategiaBusquedaEstrella();
