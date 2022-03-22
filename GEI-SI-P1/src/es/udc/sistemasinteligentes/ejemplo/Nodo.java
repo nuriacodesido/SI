@@ -9,6 +9,8 @@ public class Nodo {
     private Nodo padre;
     private Accion accion;
     private Estado estado;
+    private int coste;
+    private int f;
 
 
     public Nodo(Nodo padre,Estado estado, Accion accion){
@@ -17,10 +19,34 @@ public class Nodo {
         this.accion=accion;
     }
 
-    public Nodo(Nodo padre){
-        this(padre,null,null);
+    public Nodo(Nodo padre,Estado estado, Accion accion, int coste, int f){
+        this.estado=estado;
+        this.padre=padre;
+        this.accion=accion;
+        this.coste=coste;
+        this.f = f;
     }
 
+    public Nodo(Nodo padre){
+        this(padre,null,null,0,0);
+    }
+
+
+    public int getF() {
+        return f;
+    }
+
+    public void setF(int f) {
+        this.f = f;
+    }
+
+    public int getCoste(){
+        return coste;
+    }
+
+    public void setCoste(int coste){
+        this.coste=coste;
+    }
 
     public Nodo getPadre() {
         return padre;
