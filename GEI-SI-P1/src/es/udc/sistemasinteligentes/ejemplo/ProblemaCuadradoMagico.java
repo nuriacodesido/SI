@@ -290,42 +290,72 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
     }*/
 
 
-        public int posicion(ProblemaCuadradoMagico.Estadocuadrado esCu, int num, int diferencia){
-            int nuevaPosicion=0;
-            for (int i = 0; i < (esCu.dimension); i++) {//fila
-                for (int j = 0; j < esCu.dimension; j++) {//columna
-                    if (esCu.matriz[i][j] == num + 1) {//Obtener posición del elemento más mayor (+1) del que queremos añadir
-                        //Cambiar posición
-                        if(diferencia==1) {//fila
-                            if (i == 0)
-                                nuevaPosicion = esCu.matriz.length - 1;
+        public int[] posicion(ProblemaCuadradoMagico.Estadocuadrado esCu, int num){
+            int nuevaPosicionFila=0;
+            int nuevaPosicionColumna=0;
+            int [] nuevaPosicion= new int[2];
+            int aux=0;
+            for (int i = 0; i < (esCu.dimension)&&(aux!=-1); i++) {//fila
+                for (int j = 0; j < esCu.dimension&&(aux!=-1); j++) {//columna
+                         if ((esCu.matriz[i][j] != 0)&&(esCu.matriz[i][j] == num + 1)) {//Obtener posición del elemento más mayor (+1) del que queremos añadir
+                            //Cambiar posición
+                            if (i == esCu.matriz.length - 1)
+                                nuevaPosicionFila = 0;
                             else
-                                nuevaPosicion = esCu.fila + (diferencia);
+                                nuevaPosicionFila = i + 1;
 
-                            if (esCu.matriz[nuevaPosicion][esCu.columna]!=0)
-                                nuevaPosicion = esCu.matriz[esCu.fila-1][esCu.columna];
-
-                        }else{//columna
-                            if (j == 0)
-                                nuevaPosicion = esCu.matriz.length - 1;
+                            if(j == esCu.matriz.length - 1 )
+                                nuevaPosicionColumna = 0;
                             else
-                                nuevaPosicion = esCu.fila + (diferencia);
+                                nuevaPosicionColumna = j + 1;
 
-                            if (esCu.matriz[esCu.fila][nuevaPosicion]!=0)
-                                nuevaPosicion = esCu.matriz[esCu.fila-1][esCu.columna];
-                        }
+                            if (esCu.matriz[nuevaPosicionFila][nuevaPosicionColumna] != 0) {
+                                if(i== esCu.dimension-1)
+                                    nuevaPosicionFila=0;
+                                else
+                                    nuevaPosicionFila = i -1;
 
-                    }
+                                nuevaPosicionColumna= j;
+                            }
+
+                             aux=-1;
+                        } else if ((esCu.matriz[i][j] != 0)&&(esCu.matriz[i][j] == num - 1)) {
+                                 if (i == 0)
+                                     nuevaPosicionFila = esCu.matriz.length - 1;
+                                 else
+                                     nuevaPosicionFila = i - 1;
+
+                                 if(j ==0)
+                                     nuevaPosicionColumna = esCu.matriz.length - 1;
+                                 else
+                                     nuevaPosicionColumna = j - 1;
+
+                                 if (esCu.matriz[nuevaPosicionFila][nuevaPosicionColumna] != 0) {
+                                     if(i==esCu.dimension-1)
+                                         nuevaPosicionFila=0;
+                                     else
+                                         nuevaPosicionFila = -i + 1;
+
+                                     nuevaPosicionColumna= j;
+                                 }
+                             aux=-1;
+                         }
                 }
             }
+            nuevaPosicion[0]= nuevaPosicionFila;
+            nuevaPosicion[1]=nuevaPosicionColumna;
+
             return nuevaPosicion;
         }
 
         public int numInsertar(ProblemaCuadradoMagico.Estadocuadrado esCu, int[]arrayDisp,int[] arrayNum){
             int num = 0;
             for (int i = 0; i < (esCu.dimension * esCu.dimension); i++) {//Obtener num más pequeño antes que un elemento utilizado
-                if (i < esCu.dimension - 1) {
+                if (i < (esCu.dimension* esCu.dimension) - 1) {
                     if ((arrayDisp[i + 1] == 1) && (arrayDisp[i] == 0)) {
+                        num = arrayNum[i];
+                        break;
+                    }else if (arrayDisp[i] == 0){
                         num = arrayNum[i];
                         break;
                     }
@@ -349,9 +379,10 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
             int casillasVaciasColumna = -1;
             int [] arrayNum = new int[esCu.dimension* esCu.dimension];
             int [] arrayDisp = new int[esCu.dimension* esCu.dimension];
-            int nuevaPosicionFila=0;
-            int nuevaPosicionColumna=0;
+            int [] nuevaPosicion = new int [2];
             int [] [] matrizMeta = esCu.matriz;
+            int [] arrayDispMeta = new int[esCu.dimension* esCu.dimension];
+            int count=0;
 
             for(int i=0;i<esCu.matriz.length;i++) {//Recorremos matriz ->solo esa (fila)
                 sumafila += esCu.matriz[posicionfila][i];
@@ -380,8 +411,10 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
             //rellenamos el arrayDisp (1-posición ocupada) (0-posición vacía)
             for(int i=0;i<esCu.dimension;i++){
                 for(int j=0;j<esCu.dimension;j++){
-                    if(esCu.matriz[i][j]!=0)
+                    if(esCu.matriz[i][j]!=0) {
                         arrayDisp[(esCu.matriz[i][j]) - 1] = 1;
+                        count++;
+                    }
                 }
             }
 
@@ -401,16 +434,13 @@ public class ProblemaCuadradoMagico extends ProblemaBusqueda {
 
                 } else {
                     int n;
-                    int count=0;
-                    for(int i=0;i<(esCu.dimension* esCu.dimension);i++){
-                        if(arrayDisp[i]==1)
-                            count++;
-                    }
+                    count=0;
+                    arrayDispMeta = arrayDisp;
                     for(int i=0;i< ((esCu.dimension* esCu.dimension)-count);i++){//Rellenamos la matriz meta
-                        n = numInsertar(esCu,arrayDisp,arrayNum);
-                        nuevaPosicionFila = posicion(esCu,n,1);
-                        nuevaPosicionColumna = posicion(esCu,n,-1);
-                        matrizMeta[nuevaPosicionFila][nuevaPosicionColumna] = n;
+                        n = numInsertar(esCu,arrayDispMeta,arrayNum);
+                        nuevaPosicion = posicion(esCu,n);
+                        matrizMeta[nuevaPosicion[0]][nuevaPosicion[1]] = n;
+                        arrayDispMeta[n-1]=1;
                     }
                 }
             }
