@@ -10,9 +10,11 @@ public class MainEj1 {
                                                                                                     ProblemaAspiradora.EstadoAspiradora.PosicionBasura.AMBAS);
         ProblemaBusqueda aspiradora = new ProblemaAspiradora(estadoInicial);
 
+        System.out.println(" - ESTRATEGIA 4 - ");
         EstrategiaBusqueda buscador = new Estrategia4();
         System.out.println(buscador.soluciona(aspiradora));
 
+        System.out.println(" - ESTRATEGIA BUSQUEDA GRAFO - ");
         EstrategiaBusqueda buscador2 = new EstrategiaBusquedaGrafo();
         System.out.println(buscador2.soluciona(aspiradora));
     }
