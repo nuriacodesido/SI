@@ -27,9 +27,9 @@ public class Nodo {
         this.f = f;
     }
 
-    public Nodo(Nodo padre){
+   /* public Nodo(Nodo padre){
         this(padre,null,null,0,0);
-    }
+    }*/
 
 
     public int getF() {

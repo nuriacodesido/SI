@@ -6,6 +6,10 @@ import es.udc.sistemasinteligentes.Heuristica;
 public class HeuristicaCuadradoMagico extends Heuristica {
 
 
+    public Estado estado;
+    public HeuristicaCuadradoMagico (Estado estado){
+        this.estado = estado;
+    }
 
     @Override
     public float evalua(Estado e) {
